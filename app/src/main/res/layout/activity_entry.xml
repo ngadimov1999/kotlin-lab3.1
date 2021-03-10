@@ -22,6 +22,32 @@
             android:layout_gravity="center"
             android:text="Выйти" />
 
+        <Button
+            android:id="@+id/load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="200dp"
+            android:layout_marginRight="125dp"
+            android:layout_gravity="center"
+            android:text="Загрузить" />
+
+        <Button
+            android:id="@+id/watchDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="200dp"
+            android:layout_gravity="center"
+            android:text="Отобразить" />
+
+        <Button
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="200dp"
+            android:layout_marginLeft="125dp"
+            android:layout_gravity="center"
+            android:text="Очистить" />
+
     </FrameLayout>
 
 
@@ -30,5 +56,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
-        android:text="Думал я забыл тебя? Не в тот ты район зашел, твои данные уже оперативно отправлены Обаме" />
+        android:text="Big boss is watching you"
+        android:layout_marginLeft="50dp"/>
 </RelativeLayout>
