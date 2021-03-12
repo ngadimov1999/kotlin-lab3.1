@@ -22,7 +22,7 @@ class PonyRaceGenerator{
                 Pony(
                     Random.nextInt(1,1000).toString(),
                     Random.nextInt(1,1000).toString(),
-                    Random.nextInt(1,2)
+                    Random.nextInt(1,3)
                 ))
         }
         return ponyRace.toList()

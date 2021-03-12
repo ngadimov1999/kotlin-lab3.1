@@ -6,56 +6,80 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.task31.db.App
 import com.example.task31.models.PonyRaceGenerator
 import com.example.task31.db.AppDatabase
 import com.example.task31.db.PonyDao
+import com.example.task31.models.Pony
 import kotlinx.android.synthetic.main.activity_entry.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class EntryActivity : AppCompatActivity() {
 
-    var dao : PonyDao? = null
+    var db: AppDatabase? = App.instance?.database
+    private val pony = PonyRaceGenerator().generate(1, 1)
+    var dao: PonyDao? = null
 
     lateinit var preferences: SharedPreferences
 
-    var db: AppDatabase? = App.instance?.database
-    val pony = PonyRaceGenerator().generate(1,1)
+    private fun showData(data: List<Pony>?) {
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(applicationContext, data.toString(), duration)
+        toast.show()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?   ) {
         super.onCreate(savedInstanceState)
-        dao = AppDatabase.createDb(requireContext()).getPonyDao()
         setContentView(R.layout.activity_entry)
         preferences = getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
 
-        load.setOnClickListener{
-            dao!!.insert(pony)
+        dao = AppDatabase.createDb(this).getPonyDao()
+
+        load.setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+
+                withContext(Dispatchers.IO) {
+                    dao?.insert(pony)
+                }
+            }
             val text = "ОК!"
             val duration = Toast.LENGTH_SHORT
             val toast = Toast.makeText(applicationContext, text, duration)
             toast.show()
         }
 
-        watchDB.setOnClickListener{
-            var text = db.toString()
-            if (db == null){
-                text = "Пусто!"
+        watchDB.setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                val data = dao?.getPonies()
+                withContext(Main) {
+                    showData(data)
+                }
             }
+
+
+            //val duration = Toast.LENGTH_SHORT
+            //val toast = Toast.makeText(applicationContext, text, duration)
+            //toast.show()
+        }
+
+        clear.setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
+                   dao?.delete()
+                }
+            }
+            val text = " OK!"
             val duration = Toast.LENGTH_SHORT
             val toast = Toast.makeText(applicationContext, text, duration)
             toast.show()
         }
 
-        clear.setOnClickListener{
-            var text = "OK!"
-
-            val duration = Toast.LENGTH_SHORT
-            val toast = Toast.makeText(applicationContext, text, duration)
-            toast.show()
-        }
-
-        logout.setOnClickListener{
+        logout.setOnClickListener {
             val editor: SharedPreferences.Editor = preferences.edit()
             editor.clear()
             editor.apply()
